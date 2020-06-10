@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<htm lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech Blog - All the Technology related latest news get gere | All about Technology</title>
+<link type="text/css" href="{% static 'style/bootstrap.min.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/main.css' %}" rel="stylesheet" />
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<div>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+    	<div class="navbar-header">
+        	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+    	  	</button>
+        	<a href="" class="navbar-brand">Tech Blog</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+        	<ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="../articles">Articles</a></li>
+                <li><a href="../blog-post">Blog Post</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="../accounts/account">Account</a></li>
+                <li><a href="../accounts/logout">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container" style="margin-top:70px;">
+	<div class="row">
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}}">
+            <strong style="text-transform: capitalize;">{{message.tags}}: </strong>
+            {{message}}
+        </div>
+        {% endfor %}
+    	<div class="col-lg-3">
+        	<div class="panel panel-default" style="position:fixed">
+                <div class="panel-heading">
+                	<h4>Profile</h4>
+                </div>
+                <div class="panel-body">
+                	<p><strong>Name</strong>: {{user.first_name}} {{user.last_name}}</p><br />
+                    <p><strong>Emaii Id</strong>: {{user.email}}</p><br />
+                    <p><strong>Birth Date</strong>: {{user.dob}}</p><br />
+                    <p><strong>Gender</strong>: {{user.gender}}</p><br />
+                    <p><strong>Date Joined</strong>: {{user.date_join}}</p><br />
+                    <p align="center">
+                        <a href="" class="btn btn-primary" data-toggle="modal" 
+                        data-target="#change-pro" title="update-profile">
+                            Update Profile
+                        </a>
+                    </p>
+                    <p align="center">
+                        <a href="" class="btn btn-info" data-toggle="modal" 
+                        data-target="#change-pass" title="change-password">Change Password</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    	<div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% for blog in blogs %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4><a href="../blog-detail/{{blog.id}}">{{blog.title}}</a></h4>
+                        </div>
+                        <div class="panel-body">
+                            <p>Posted by: {{blog.creator}} | Category: {{blog.category}} | Date: {{blog.date}}</p>
+                            <a href="../blog-detail/{{blog.id}}">
+                            <img src="{{blog.img.url}}" class="img-thumbnail" width="100%" style="max-height:200px" />
+                            </a>
+                            <p align="justify">{{blog.description|truncatewords:50}}</p><br />
+                            <p align="right">
+                                <a href="../blog-detail/{{blog.id}}" class="btn btn-info" title="read-blog">Read More</a>
+                                <a href="../delete-blog/{{blog.id}}" class="btn btn-danger" title="delete-blog">Delete</a>
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                   <div align="center">
+                        {% if pageNo > 0 %}
+                        <a href="?page={{pageNo}}" class="form-control btn-primary">Load More</a><br/>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3">
+        	<div class="panel panel-default" style="position:fixed">
+                <div class="panel-heading">
+                	<h4>Popular Categories</h4>
+                </div>
+                <div class="panel-body">
+                	<p><a href="../articles/category?search=Designing">Designing <span class="badge">{{categories.0}}</span></a></p>
+                    <p><a href="../articles/category?search=Scripting-Language">Scripting Languages <span class="badge">{{categories.1}}</span></a></p>
+                    <p><a href="../articles/category?search=Programming-Language">Programming Languages <span class="badge">{{categories.2}}</span></a></p>
+                    <p><a href="../articles/category?search=Technology">Technology <span class="badge">{{categories.3}}</span></a></p>
+                    <p><a href="../articles/category?search=Programming">Programming <span class="badge">{{categories.4}}</span></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="change-pro" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update Profile</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="../accounts/update-profile" method="post" onSubmit="return validate()">
+                        {% csrf_token %}
+                        <label>First Name:</label>
+                        <input type="text" value="{{user.first_name}}" class="form-control" name="fname" id="fname" />
+                        <span class="error" id="errFname"></span><br />
+                        <label>Last Name:</label>
+                        <input type="text" value="{{user.last_name}}" class="form-control" name="lname" id="lname" />
+                        <span class="error" id="errLname"></span><br />
+                        <label>Email Id:</label>
+                        <input type="text" value="{{user.email}}" readonly   class="form-control" name="email" id="email" />
+                        <span class="error" id="errEmail"></span><br />
+                        <label>DOB:</label>
+                        <input type="date" value="{{user.dob|date:'Y-m-d'}}" class="form-control" name="dob" id="dob" />
+                        <span class="error" id="errDob"></span><br />
+                        <label class="radio-inline"><input type="radio" value="Male" name="gender"
+                                                    {% if user.gender == 'Male' %} checked{% endif %}>Male</label>
+						<label class="radio-inline"><input type="radio" value="Female" name="gender"
+                                                    {% if user.gender == 'Female' %} checked{% endif %}>Female
+                        </label><br /><br />
+                        <input type="submit" class="btn btn-warning" value="Update"/>
+                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="change-pass" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Change Passowrd</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="../accounts/change-password" method="POST" onSubmit="return checkPass()">
+                        {% csrf_token %}
+                        <label>Old Passowrd:</label>
+                        <input type="password" class="form-control" name="oldpass" id="oldpass" /><br />
+                        <label>New Passowrd:</label>
+                        <input type="password" class="form-control" name="newpass" id="newpass" />
+                        <span class="error" id="errPass"></span><br />
+                        <label>Confirm Passowrd:</label>
+                        <input type="password" class="form-control" name="cpass" id="cpass" />
+                        <span class="error" id="errCpass"></span><br />
+                        <input type="submit" value="Change Password" class="btn btn-primary" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+	Website Designed & Developed by Tech Blog.
+</div>
+
+</body>
+<script type="text/javascript">
+    function validate(){
+        var fname = document.getElementById("fname").value;
+        var lname = document.getElementById("lname").value;
+		var dob = document.getElementById("dob").value;
+		var email = document.getElementById("email").value;
+		
+		fname.trim();
+		lname.trim();
+		dob.trim();
+		email.trim();
+		
+		var regName = /^[a-zA-Z]+$/;
+		var regEmail = /^([a-zA-Z0-9\.-]+)@([a-zA-Z0-9\-]+).([a-z]+)(.[a-z]+)?$/;
+		var regDob = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/;
+		
+        if(!regName.test(fname)){
+			document.getElementById('errFname').innerHTML = "Only Alphabets (A-Z small or caps) allowed!";
+        	document.getElementById('errFname').style.display = "block";
+			document.getElementById('fname').style.borderColor = "red";
+			return false;
+        } else{
+			document.getElementById('errFname').innerHTML = "";
+        	document.getElementById('errFname').style.display = "none";
+			document.getElementById('fname').style.borderColor = "";
+		}
+		
+		if(!regName.test(lname)){
+			document.getElementById('errLname').innerHTML = "Only Alphabets (A-Z small or caps) allowed!";
+        	document.getElementById('errLname').style.display = "block";
+			document.getElementById('lname').style.borderColor = "red";
+			return false;
+        } else{
+			document.getElementById('errLname').innerHTML = "";
+        	document.getElementById('errLname').style.display = "none";
+			document.getElementById('lname').style.borderColor = "";
+		}
+		
+		if(!regEmail.test(email)){
+			document.getElementById('errEmail').innerHTML = "Invalid email address!";
+        	document.getElementById('errEmail').style.display = "block";
+			document.getElementById('email').style.borderColor = "red";
+			return false;
+		} else{
+			document.getElementById('errEmail').innerHTML = "";
+        	document.getElementById('errEmail').style.display = "none";
+			document.getElementById('email').style.borderColor = "";
+		}
+		
+		if(!regDob.test(dob)){
+			document.getElementById('errDob').innerHTML = "Invalid Date of Birth!";
+        	document.getElementById('errDob').style.display = "block";
+			document.getElementById('dob').style.borderColor = "red";
+			return false;
+		} else{
+			document.getElementById('errDob').innerHTML = "";
+        	document.getElementById('errDob').style.display = "none";
+			document.getElementById('dob').style.borderColor = "";
+		}
+    }
+	
+	function checkPass(){
+		var pass = document.getElementById("newpass").value;
+		var cpass = document.getElementById("cpass").value;
+		
+		pass.trim();
+		cpass.trim();
+		
+		var regPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+		
+		if(!regPass.test(pass)){
+			document.getElementById('errPass').innerHTML = "Password must contain a lowercase letter, a upercase letter, a number and 8 characters long!";
+        	document.getElementById('errPass').style.display = "block";
+			document.getElementById('newpass').style.borderColor = "red";
+			return false;
+		} else{
+			document.getElementById('errPass').innerHTML = "";
+        	document.getElementById('errPass').style.display = "none";
+			document.getElementById('newpass').style.borderColor = "";
+		}
+		
+		if(cpass != pass){
+			document.getElementById('errCpass').innerHTML = "Password do not match!";
+        	document.getElementById('errCpass').style.display = "block";
+			document.getElementById('cpass').style.borderColor = "red";
+			return false;
+		} else{
+			document.getElementById('errCpass').innerHTML = "";
+        	document.getElementById('errCpass').style.display = "none";
+			document.getElementById('cpass').style.borderColor = "";
+		}
+	}
+</script>
+</html>

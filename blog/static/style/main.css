@@ -1,0 +1,35 @@
+body{
+	font-family:Arial, Helvetica, sans-serif;
+}
+.jumbotron{
+	padding:0;
+}
+.panel-body img{
+	margin-bottom:10px;	
+}
+.active{
+	cursor: help;
+}
+.block {
+  display: block;
+  width: 100%;  
+  background-color: #337ab7;
+  color:#FFF;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  border:0;
+  border-radius: 5px;
+}
+.error{
+  color: red;
+}
+.footer{
+	background:#000;
+	color:#FFF;
+	text-align:center;
+	padding: 10px;
+	bottom:0;
+	position:relative;
+}

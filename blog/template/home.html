@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<htm lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech Blog - All the Technology related latest news get gere | All about Technology</title>
+<link type="text/css" href="{% static 'style/bootstrap.min.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/main.css' %}" rel="stylesheet" />
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+    	<div class="navbar-header">
+        	<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+    	  	</button>
+        	<a href="" class="navbar-brand">Tech Blog</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+        	<ul class="nav navbar-nav">
+                <li class="active"><a href="/">Home</a></li>
+                <li><a href="../articles">Articles</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="../blog-post">Blog Post</a></li>
+                {% endif %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li><a href="../accounts/account">Account</a></li>
+                <li><a href="../accounts/logout">Logout</a></li>
+                {% else %}
+                <li><a href="../accounts/login">Login</a></li>
+                <li><a href="../accounts/signup">Sign up</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="jumbotron">
+	<img src="{% static 'pics/tech-blog-banner-main.jpg' %}" alt="Tech blog banners" title="Tech Blog" width="100%" height="400px" />
+</div>
+
+<div class="container">
+	<h2>Latest Blogs</h2>
+	<div class="row">
+    	<div class="col-lg-9">
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+                <strong style="text-transform: capitalize;">{{message.tags}}: </strong>
+                {{message}}
+            </div>
+            {% endfor %}
+
+            {% for blog in blogs %}
+        	<div class="panel panel-default">
+            	<div class="panel-heading">
+                	<h4><a href="../blog-detail/{{blog.id}}">{{blog.title}}</a></h4>
+                </div>
+                <div class="panel-body">
+                    <p>Posted by: <a href="../accounts/profile/{{blog.creator}}">{{blog.creator}}</a> | Category: {{blog.category}} | Date: {{blog.date}}</p>
+                	<a href="../blog-detail/{{blog.id}}">
+                    <img src="{{blog.img.url}}" class="img-thumbnail" width="100%" style="max-height:200px" />
+                    </a>
+                    <p align="justify">{{blog.description|truncatewords:50}}</p><br />
+                    <p align="right">
+                        <a href="../blog-detail/{{blog.id}}" class="btn btn-info" title="read-blog">Read More</a>
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div align="center">
+                <ul class="pagination pagination-lg">
+                    <li class="active"><a href="/">First</a></li>
+                    {% for i in blogs.paginator.page_range %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endfor %}
+                    <li class="active"><a href="?page={{blogs.paginator.num_pages}}">Last</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-lg-3">
+        	<div class="panel panel-default">
+            <div class="panel-heading">
+                	<h4>Popular Categories</h4>
+                </div>
+                <div class="panel-body">
+                	<p><a href="../articles/category?search=Designing">Designing <span class="badge">{{categories.0}}</span></a></p>
+                    <p><a href="../articles/category?search=Scripting-Language">Scripting Languages <span class="badge">{{categories.1}}</span></a></p>
+                    <p><a href="../articles/category?search=Programming-Language">Programming Languages <span class="badge">{{categories.2}}</span></a></p>
+                    <p><a href="../articles/category?search=Technology">Technology <span class="badge">{{categories.3}}</span></a></p>
+                    <p><a href="../articles/category?search=Programming">Programming <span class="badge">{{categories.4}}</span></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+	Website Designed & Developed by Tech Blog.
+</div>
+
+</body>
+</html>
