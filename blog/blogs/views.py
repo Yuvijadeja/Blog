@@ -19,7 +19,7 @@ def cat_load():
 
 
 def home(request):
-    blogs = Blogs.objects.all()
+    blogs = Blogs.objects.all()[0:5]
 
     if not blogs:
         messages.info(request, "No records found!")
